@@ -1,0 +1,1776 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+
+
+    <title></title>
+    <script type="text/javascript" src="Three.js"></script>
+    <script type="text/javascript" src="requestAnimFrame.js"></script>
+    <script src="EdgesGeometry.js"></script>
+    <script src="three2.js"></script>
+    <script src="pentagon.js"></script>
+    <script src="PointDragControls.js"></script>
+    <script src="OrbitControls.js"></script>
+
+    <style>
+
+        @font-face {
+            font-family: "SecularOne";
+            src: url("icons/SecularOne-Regular.ttf");
+        }
+
+        .mytable {
+            font-family: SecularOne;
+            color: #4577ed;
+            font-size: 16px;
+        }
+
+        .mytable2 {
+            font-family: SecularOne;
+            color: #4577ed;
+            font-size: 13px;
+            position: absolute;
+            bottom: 550px;
+            left: 100px;
+            border: 0px solid #2677cf;
+            border-style: dotted;
+        }
+
+
+        .myslider {
+            -webkit-appearance: none;
+            background: #ffffff;
+            width: 100%;
+            height: 1px;
+            opacity: 2;
+        }
+
+        .slider-output1 {
+            -webkit-appearance: none;
+            cursor: pointer;
+            width: 70px;
+            height: 25px;
+            background: #3d85c6;
+            border-radius: 5px;
+            padding: 4px 6px;
+            color: #ffffff;
+            font: normal 18px/1 "Calibri", sans-serif;
+            text-align: center;
+            text-shadow: 1px 1px #000000;
+            display: block;
+            position: absolute;
+            bottom: 372px;
+            left: 37px;
+            box-sizing: border-box;
+            transform: translateX(-50%);
+            font-family: SecularOne;
+        }
+
+        .slider-output2 {
+            -webkit-appearance: none;
+            cursor: pointer;
+            width: 70px;
+            height: 25px;
+            background: #3d85c6;
+            border-radius: 5px;
+            padding: 4px 6px;
+            color: #ffffff;
+            font: normal 18px/1 "Calibri", sans-serif;
+            text-align: center;
+            text-shadow: 1px 1px #000000;
+            display: block;
+            position: absolute;
+            bottom: 412px;
+            left: 37px;
+            box-sizing: border-box;
+            transform: translateX(-50%);
+            font-family: SecularOne;
+        }
+
+        .slider-output3 {
+            -webkit-appearance: none;
+            cursor: pointer;
+            width: 70px;
+            height: 25px;
+            background: #3d85c6;
+            border-radius: 5px;
+            padding: 4px 6px;
+            color: #ffffff;
+            font: normal 18px/1 "Calibri", sans-serif;
+            text-align: center;
+            text-shadow: 1px 1px #000000;
+            display: block;
+            position: absolute;
+            bottom: 452px;
+            left: 37px;
+            box-sizing: border-box;
+            transform: translateX(-50%);
+            font-family: SecularOne;
+        }
+
+            .slider-output3:hover {
+                color: orange;
+                width: 90px;
+            }
+
+        .myslider::-moz-range-thumb {
+            -webkit-appearance: none;
+            cursor: pointer;
+            width: 60px;
+            height: 30px;
+            background: #3d85c6;
+            border-radius: 5px;
+            padding: 4px 4px;
+            color: #ffffff;
+            display: inline-block;
+            font: normal bold 10px/1 "Calibri", sans-serif;
+            text-align: center;
+            text-shadow: 1px 1px #000000;
+            mix-blend-mode: hue;
+            ////mix-blend-mode: hue;
+        }
+
+
+        .myslider::-moz-range-progress {
+            background-color: blue;
+            height: 1em;
+            height: 1px;
+            opacity: 2;
+        }
+
+
+        .myslider:hover {
+            opacity: 1;
+        }
+
+
+        * {
+            margin: 0;
+            padding: 0;
+            background: black;
+        }
+
+        canvas {
+            color: #7c7d81;
+        }
+
+        body {
+            overflow: hidden;
+        }
+
+
+
+
+        table {
+            position: absolute;
+            bottom: 10px;
+            right: 0;
+            border: 0px solid #2677cf;
+            border-style: dotted;
+        }
+
+            table td {
+                border: 0px solid red;
+            }
+
+
+
+        #modalContainer {
+            background-color:;
+            position: absolute;
+            top: 0;
+            width: 15%;
+            height: 15%;
+            left: 0px;
+            z-index: 10000;
+            background-image: url(tp.png); /* required by MSIE to prevent actions on lower z-index elements */
+        }
+
+        #alertBox {
+            position: relative;
+            width: 30%;
+            min-height: 100px;
+            max-height: 430px;
+            margin-top: 50px;
+            border: 1px solid #fff;
+            background-color: #fff;
+            background-repeat: no-repeat;
+            top: 30%;
+        }
+
+        #modalContainer > #alertBox {
+            position: fixed;
+        }
+
+        #alertBox h1 {
+            margin: 0;
+            font: bold 1em Raleway,arial;
+            background-color: blue;
+            color: #FFF;
+            border-bottom: 1px solid #f97352;
+            padding: 10px 0 10px 5px;
+        }
+
+        #alertBox p {
+            height: 50px;
+            padding-left: 5px;
+            padding-top: 10px;
+            text-align: center;
+            vertical-align: middle;
+            font: normal bold 14px/1 Raleway,arial;
+            background: white;
+            color: black;
+        }
+
+        #alertBox #closeBtn {
+            display: block;
+            position: relative;
+            margin: 10px auto 10px auto;
+            padding: 7px;
+            border: 0 none;
+            width: 70px;
+            text-transform: uppercase;
+            text-align: center;
+            color: #FFF;
+            background-color: blue;
+            border-radius: 0px;
+            text-decoration: none;
+            outline: 0 !important;
+            font: bold 1em Raleway,arial;
+        }
+
+        .mybutton {
+            background: #073763;
+            background: linear-gradient(#3d85c6, #073763 50%, #3d85c6);
+            border-radius: 1000px;
+            padding: 7px 12px;
+            color: #ffffff;
+            display: inline-block;
+            font: normal bold 14px/1 "Helvetica", Helvetica;
+            text-align: center;
+            text-shadow: 1px 1px #000000;
+        }
+
+        .mybuttonGray {
+            background: #eeeeee;
+            background: linear-gradient(#cccccc, #eeeeee 50%, #cccccc);
+            border-radius: 1000px;
+            padding: 7px 12px;
+            color: #f3f3f3;
+            display: inline-block;
+            font: normal bold 14px/1 "Helvetica", sans-serif;
+            text-align: center;
+            text-shadow: 1px 1px #000000;
+        }
+
+        .item {
+            position: relative;
+            left: 600px;
+            top: -80px;
+            background: #073763;
+            background: linear-gradient(#3d85c6, #073763 50%, #3d85c6);
+            border-radius: 50px;
+            padding: 12px 15px;
+            color: #ffffff;
+            display: inline-block;
+            font: normal bold 40px/1 "SecularOne", SecularOne;
+            text-align: center;
+            text-shadow: 1px 1px #000000;
+        }
+
+        .price {
+            position: relative;
+            left: 450px;
+            top: -30px;
+            background: #073763;
+            background: #38aaed;
+            border-radius: 50px;
+            padding: 7px 12px;
+            color: #ffffff;
+            display: inline-block;
+            font: normal 22px/1 "SecularOne", SecularOne;
+            text-align: center;
+            text-shadow: 1px 1px #000000;
+            width: 140px;
+            align-self: center;
+        }
+
+        .mytest {
+            color: black;
+        }
+
+        .estimated {
+            position: relative;
+            left: 290px;
+            top: 2px;
+            color: white;
+            display: inline-block;
+            font: normal bold 16px/1 "SecularOne", SecularOne;
+            text-align: center;
+            text-shadow: 1px 1px #000000;
+            width: 150px;
+        }
+
+        .offers {
+            position: relative;
+            left: 115px;
+            top: 50px;
+            color: white;
+            display: inline-block;
+            font: normal 26px/1 "SecularOne", SecularOne;
+            text-align: center;
+            text-shadow: 1px 1px #000000;
+            width: 150px;
+            border: 2px solid #ffffff;
+            border-radius: 1000px;
+            padding: 10px 20px;
+        }
+
+        .carry {
+            position: relative;
+            left: -50px;
+            top: 450px;
+            background: black;
+            border-radius: 1000px;
+            color: #ffffff;
+            display: inline-block;
+            font: normal 16px/1 "SecularOne", SecularOne;
+            text-align: center;
+            text-shadow: 1px 1px #000000;
+        }
+
+        .malamine_div {
+            visibility: hidden;
+        }
+
+        .laminate_div {
+            visibility: hidden;
+        }
+
+        .input_button {
+            /* removes default styling from input color element */
+            padding: 0;
+            border: none;
+            /* makes input (color swatch) 100% size of container */
+            position: absolute;
+            width: 50px;
+            height: 30px;
+            /* mix blend mode makes the color of the swatch alter the image behind it. */
+            mix-blend-mode: hue; /* try screen, multiply or other blend modes for different effects */
+        }
+
+        /* removes default styling from input color element */
+        ::-webkit-color-swatch {
+            border: none;
+        }
+
+        ::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        ::-moz-color-swatch,
+        ::-moz-focus-inner {
+            border: none;
+        }
+
+        ::-moz-focus-inner {
+            padding: 0;
+        }
+
+        .mylist {
+            color: white;
+        }
+
+        a:link {
+            color: white;
+            background-color: transparent;
+            text-decoration: none;
+        }
+
+        a:visited {
+            color: white;
+            background-color: transparent;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: white;
+            background-color: transparent;
+            text-decoration: none;
+        }
+
+        a:active {
+            color: white;
+            background-color: transparent;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body onload="calculatePrice(); CreateOrderSummary()">
+
+
+    <div class="item">
+        CUBE
+    </div>
+    <div class="price" id="minimum">
+
+
+    </div>
+    <div class="estimated">
+        Estimated Price
+
+    </div>
+
+    <span class="offers" id="order">
+        <a href="javascript:void(0)"
+           onclick="window.open(order_page, '_self')">Get Offers</a>
+
+    </span>
+
+    <div class="carry">
+        Carries max  <span id="kg"></span> kg
+
+    </div>
+
+    <canvas id="canvas1"></canvas>
+
+    <table class="mytable">
+        <tr>
+            <td width="250" height="20" align="right"></td>
+
+        </tr>
+        <tr>
+            <td align="left"><img src="icons/Blue_Dot.png" height="8" width="8"><span style=font-weight:bold><font color="white">  Choose </font><font color="blue"></font> Your <font color="white"> Type</font></span></td>
+            <td width="120" align="center"> </td>
+        </tr>
+
+        <tr>
+            <td height="40" width="250" align="left">
+                <span onclick="changeFace('icons/6aface.png', 'icons/5aface.png', 'icons/7face.png','6face', '5face', '7face','7')"><img id="7face" src="icons/7face.png" height="30" width="60"></span>
+                <span onclick="changeFace('icons/5aface.png', 'icons/7aface.png', 'icons/6face.png','5face','7face', '6face','6')"><img id="6face" src="icons/6face.png" height="30" width="60"></span>
+                <span onclick="changeFace('icons/7aface.png', 'icons/6aface.png', 'icons/5face.png','7face', '6face', '5face','5')"><img id="5face" src="icons/5face.png" height="30" width="60"></span>
+
+            </td>
+            <td width="200" height="30" align="left">
+                <span class="mytest" id="mynewface">0</span>
+                
+                <output class='slider-output1' id="out1">W: 20</output>
+                <output class='slider-output2' id="out2">H: 20</output>
+            </td>
+
+        </tr>
+
+
+        <tr>
+            <td align="left"><img src="icons/Blue_Dot.png" height="8" width="8"><span style=font-weight:bold><font color="white">  Choose </font><font color="blue"></font> Your <font color="white"> Size</font></span></td>
+            <td width="120" align="center"> </td>
+        </tr>
+
+        <tr>
+
+            <td width="250" height="35" align="right">
+
+                <input hidden="hidden" onchange="this.setAttribute('value', this.value);  calculatePrice();checkCompatabilityOfThikness(material_id, material_thikness,num_plates)" id="y" class="myslider" type="range" value="20" min="20" max="120">
+
+
+            </td>
+            <td width="120" align="center"><span class="mytest" id="numplates"></span><span id="test"></span><span style=font-weight:bold><font color="white"><span id="Depth_text"></span></font></span></td>
+        </tr>
+        <tr>
+            <td width="250" height="35" align="right">
+
+                <input onchange="this.setAttribute('value', this.value);  calculatePrice(); checkCompatabilityOfThikness(material_id, material_thikness,num_plates)" id="x2" class="myslider" type="range" value="20" min="20" max="120">
+
+
+
+            </td>
+            <td width="150" align="center"><span style=font-weight:bold><font color="white"><span id="width_text"></span></font></span></td>
+        </tr>
+        <tr>
+            <td width="250" height="35" align="right">
+                <span>
+                    <input onchange="this.setAttribute('value', this.value);  calculatePrice(); checkCompatabilityOfThikness(material_id, material_thikness,num_plates)" id="x1" class="myslider" type="range" value="20" min="20" max="120">
+
+                </span>
+            </td>
+            <td width="120" align="center"><span style=font-weight:bold><font color="white"><span id="height_text"></span></font></span></td>
+        </tr>
+        <tr>
+            <td width="200" height="10" align="right"></td>
+
+        </tr>
+        <tr>
+            <td align="left"><img src="icons/Blue_Dot.png" height="8" width="8"><span style=font-weight:bold><font color="white">  Choose </font><font color="blue"></font> Your <font color="white"> Material</font></span></td>
+            <td width="120" align="center"> </td>
+        </tr>
+        <tr>
+            <td height="40" width="160" align="left">
+                <span onclick="changeMaterial('icons/icons-02.png', 'icons/icons-06.png', 'icons/icons-07.png', 'icons/icons-05.png', 'icons/icons-01a.png', 'osb', 'pine', 'plywood','birch', 'mdf','1')"><img id="mdf" src="icons/icons-01.png" height="30" width="48"></span>
+                <span onclick="changeMaterial('icons/icons-01.png', 'icons/icons-06.png', 'icons/icons-07.png', 'icons/icons-05.png', 'icons/icons-02a.png', 'mdf', 'pine', 'plywood', 'birch', 'osb','2')"><img id="osb" src="icons/icons-02.png" height="30" width="48"></span>
+                <span onclick="changeMaterial('icons/icons-01.png', 'icons/icons-02.png', 'icons/icons-07.png', 'icons/icons-05.png', 'icons/icons-06a.png', 'mdf', 'osb', 'plywood', 'birch',  'pine','3')"><img id="pine" src="icons/icons-06.png" height="30" width="48"></span>
+                <span onclick="changeMaterial('icons/icons-01.png', 'icons/icons-02.png', 'icons/icons-06.png', 'icons/icons-05.png', 'icons/icons-07a.png', 'mdf', 'osb', 'pine', 'birch', 'plywood','4')"><img id="plywood" src="icons/icons-07.png" height="30" width="48"></span>
+                <span onclick="changeMaterial('icons/icons-01.png', 'icons/icons-02.png', 'icons/icons-06.png', 'icons/icons-07.png', 'icons/icons-13.png',  'mdf', 'osb', 'pine',  'plywood', 'birch','5')"><img id="birch" src="icons/icons-05.png" height="30" width="48"></span>
+
+            </td>
+            <td width="200" height="20" align="left"><span class="mytest" id="mymaterial">1</span></td>
+
+        </tr>
+        <tr>
+            <td align="left"><img src="icons/Blue_Dot.png" height="8" width="8"><span style=font-weight:bold><font color="white">  Choose </font><font color="blue"></font> Your <font color="white"> Material Coating</font></span></td>
+            <td width="120" align="center"> </td>
+        </tr>
+        <tr>
+            <td height="30" width="160" align="left">
+
+                <span id="1" onclick="changeCoating('icons/icons-04.png', 'icons/icons paint-05.png', 'icons/icons paint-06.png', 'icons/icons-12.png', 'laminate', 'lac', 'paint', 'melamine', '1')"><img id="melamine" src="icons/icons-03.png" height="30" width="48"></span>
+                <span id="2" onclick="changeCoating('icons/icons-03.png', 'icons/icons paint-05.png', 'icons/icons paint-06.png', 'icons/icons-14.png', 'melamine', 'lac', 'paint', 'laminate','2')"><img id="laminate" src="icons/icons-04.png" height="30" width="48"></span>
+                <span id="3" onclick="changeCoating('icons/icons-03.png', 'icons/icons-04.png', 'icons/icons paint-06.png', 'icons/icons paint-01.png', 'melamine', 'laminate', 'paint', 'lac','3')"><img id="lac" src="icons/icons paint-05.png" height="30" width="48"></span>
+                <span id="4" onclick="changeCoating('icons/icons-03.png', 'icons/icons-04.png', 'icons/icons paint-05.png', 'icons/icons paint-02.png', 'melamine', 'laminate', 'lac', 'paint','4')"><input id="color" type="color" value="#4577ed" width="5" class="input_button"><img id="paint" src="icons/icons paint-06.png" height="30" width="48"></span>
+
+            </td>
+            <td width="200" height="47" align="right"><span class="mytest" id="mycoating">4</span></td>
+
+
+        </tr>
+
+        <tr>
+            <td width="220" height="5" align="right"></td>
+
+        </tr>
+        <tr>
+            <td align="left">
+
+                <img src="icons/Blue_Dot.png" height="8" width="8"><span style=font-weight:bold><font color="white">  Choose </font><font color="blue"></font> Your <font color="white"><span id="coat_choise"> Color</span></font></span>
+            </td>
+            <td width="120" align="center"> </td>
+        </tr>
+        <tr>
+            <td align="center" height="30">
+                <span id="coat_select">
+
+                </span><br />
+
+            </td>
+        </tr>
+
+        <tr>
+            <td width="260" align="left"><img src="icons/Blue_Dot.png" height="8" width="8"><span style=font-weight:bold><font color="white">  Choose </font><font color="blue"></font> Your <font color="white"> Material Thicknes</font></span></td>
+
+        </tr>
+        <tr>
+            <td height="50" width="160" align="left">
+
+
+                <span id="9" onclick="changThikness('icons/12a_mm.png', 'icons/18a_mm.png', 'icons/36a_mm.png', 'icons/9_mm.png', '12mm', '18mm', '36mm', '9mm','9')"><img id="9mm" src="icons/9a_mm.png" height="30" width="60"></span>
+                <span id="12" onclick="changThikness('icons/9a_mm.png', 'icons/18a_mm.png', 'icons/36a_mm.png','icons/12_mm.png', '9mm', '18mm', '36mm', '12mm','12')"><img id="12mm" src="icons/12a_mm.png" height="30" width="60"></span>
+                <span id="18" onclick="changThikness('icons/9a_mm.png', 'icons/12a_mm.png',  'icons/36a_mm.png','icons/18_mm.png', '9mm', '12mm' , '36mm', '18mm','18')"><img id="18mm" src="icons/18a_mm.png" height="30" width="60"></span>
+                <span id="36" onclick="changThikness('icons/9a_mm.png',  'icons/12a_mm.png', 'icons/18a_mm.png',  'icons/36_mm.png', '9mm', '12mm' , '18mm','36mm','36')"><img id="36mm" src="icons/36a_mm.png" height="30" width="60"></span>
+            </td>
+            <td width="200" height="30" align="left"><span class="mytest" id="mynthickness">9</span><span id="compatible">  </span></td>
+
+        <tr>
+            <td align="left"><img src="icons/Blue_Dot.png" height="8" width="8"><span style=font-weight:bold><font color="white">    Choose </font><font color="blue"></font> Your <font color="white"> Additional Parts</font> </span></td>
+            <td width="120" align="center"> </td>
+        </tr>
+        <tr>
+            <td align="left" width="250" height="50">
+                <span onclick="handleAdditionals('icons/icons1-06.png', 'icons/icons1-01.png','wheels',  'wheels_pic')">
+                    <input type="checkbox" class="input_button" id="wheels" />
+                    <img src="icons/icons1-01.png" height="40" width="40" id="wheels_pic" />
+                </span>
+                <span onclick="handleAdditionals('icons/icons1-05.png', 'icons/icons1-02.png', 'door', 'door_pic')">
+                    <input type="checkbox" class="input_button" id="door" />
+                    <img src="icons/icons1-02.png" height="40" width="40" id="door_pic" />
+                </span>
+                <span onclick="handleAdditionals('icons/icons1-04.png', 'icons/icons1-03.png', 'hang', 'hang_pic')">
+                    <input type="checkbox" class="input_button" id="hang" />
+                    <img src="icons/icons1-03.png" height="40" width="40" id="hang_pic" />
+                </span>
+            </td>
+            <td width="120" align="center"></td>
+        </tr>
+    </table>
+    
+
+    <script>
+
+        ///////////////////////// Set up////////////////////////////////////////////
+
+
+
+
+        var x1 = document.querySelector('#x1');
+        var x2 = document.querySelector('#x2');
+        var y = document.querySelector('#y');
+        var color = document.querySelector('#color');
+        var order_summary;
+        var order_page;
+        var order_text;
+
+
+        var total_size;
+        var min_price;
+        var selected_color;
+        var num_plates = 1;
+        var num_of_faces = 6;
+        var material_id = 1;
+        var material_thikness = 9;
+        var out_image = 'https://i.ibb.co/qCXKjmx/mdf1b.jpg';
+        var in_image;
+        var coat_type = 0;
+        var coat_kind = 0;
+        var material_change_flag;
+        var wheels_indicator = 0;
+        var door_indocator = 0;
+        var hang_indicator = 0;
+        var temp_href = 1;
+        var first_load = 1;
+        var Cube_Structure = 1;
+
+
+
+        /////////////////////Set link parameters
+
+        function CreateOrderSummary() {
+
+            if (coat_type == 4) {
+                coat_kind = selected_color;
+
+            };
+
+            order_summary =
+                '?faces=' + num_of_faces +
+                '&x1=' + x1.value +
+                '&x2=' + x2.value +
+                '&y=' + y.value +
+                '&material=' + material_id +
+                '&thikness=' + material_thikness +
+                '&coat_type=' + coat_type +
+                '&coat_kind=' + coat_kind +
+                '&wheels=' + wheels_indicator +
+                '&door=' + door_indocator +
+                '&hang=' + hang_indicator +
+                '&price=' + min_price;
+
+            order_page = 'order-summary.html' + order_summary;
+
+
+
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        function showSection(id) {
+
+            var malamine_content =
+                '<img onclick="set_coat_kind(1480); chooseimage(1)" id="1480" src="icons/malamine1480.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(3130); chooseimage(1)" id="3130" src="icons/malamine3130.jpg" height="20" width="20"/>   ' +
+                '<img onclick="set_coat_kind(3150); chooseimage(1)" id="3150" src="icons/malamine3150.jpg" height="20" width="20"/>   ' +
+                '<img onclick="set_coat_kind(3930); chooseimage(1)" id="3930" src="icons/malamine3930.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(3234); chooseimage(1)" id="3234" src="icons/malamine3234.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(3340); chooseimage(1)" id="3340" src="icons/malamine3340.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(3374); chooseimage(1)" id="3374" src="icons/malamine3374.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(3614); chooseimage(1)" id="3614" src="icons/malamine3614.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(3707); chooseimage(1)" id="3707" src="icons/malamine3707.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(3870); chooseimage(1)" id="3870" src="icons/malamine3870.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(3915); chooseimage(1)" id="3915" src="icons/malamine3915.jpg" height="20" width="20" />   ';
+
+            var laminate_content =
+                '<img onclick="set_coat_kind(113); chooseimage(2)" id="113sd" src="icons/laminate-113sd.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(1070); chooseimage(2)" id="1070sd" src="icons/laminate-1070sd.jpg" height="20" width="20"/>   ' +
+                '<img onclick="set_coat_kind(3040); chooseimage(2)" id="3040sd" src="icons/laminate-3040sd.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(1690); chooseimage(2)" id="1690sd" src="icons/laminate-1690sd.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(1730); chooseimage(2)" id="1730sd" src="icons/laminate-1730sd.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(2990); chooseimage(2)" id="2290sd" src="icons/laminate-2290sd.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(2450); chooseimage(2)" id="2450sd" src="icons/laminate-2450sd.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(2470); chooseimage(2)" id="2470sd" src="icons/laminate-2470sd.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(2680); chooseimage(2)" id="2680sd" src="icons/laminate-2680sd.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(2840); chooseimage(2)" id="2840sd" src="icons/laminate-2840sd.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(4540); chooseimage(2)" id="4540sd" src="icons/laminate-4540sd.jpg" height="20" width="20" />   ';
+
+            var mdf_varnish_content =
+
+                '<img onclick="set_coat_kind(1); chooseimage(3)" id="1" src="icons/coat/mdf1.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(2); chooseimage(3)" id="2" src="icons/coat/mdf2.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(3); chooseimage(3)" id="3" src="icons/coat/mdf3.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(4); chooseimage(3)" id="4" src="icons/coat/mdf4.jpg" height="20" width="20" />   ';
+
+            var osb_varnish_content =
+
+                '<img onclick="set_coat_kind(1); chooseimage(3)" id="1" src="icons/coat/osb1.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(2); chooseimage(3)" id="2" src="icons/coat/osb2.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(3); chooseimage(3)" id="3" src="icons/coat/osb3.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(4); chooseimage(3)" id="4" src="icons/coat/osb4.jpg" height="20" width="20" />   ';
+
+            var pine_varnish_content =
+
+                '<img onclick="set_coat_kind(1); chooseimage(3)" id="1" src="icons/coat/pine1.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(2); chooseimage(3)" id="2" src="icons/coat/pine2.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(3); chooseimage(3)" id="3" src="icons/coat/pine3.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(4); chooseimage(3)" id="4" src="icons/coat/pine4.jpg" height="20" width="20" />   ';
+
+            var plywood_varnish_content =
+
+                '<img onclick="set_coat_kind(1); chooseimage(3)" id="1" src="icons/coat/plywood1.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(2); chooseimage(3)" id="2" src="icons/coat/plywood2.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(3); chooseimage(3)" id="3" src="icons/coat/plywood3.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(4); chooseimage(3)" id="4" src="icons/coat/plywood4.jpg" height="20" width="20" />   ';
+
+            var birch_varnish_content =
+
+                '<img onclick="set_coat_kind(1); chooseimage(3)" id="1" src="icons/coat/birch1.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(2); chooseimage(3)" id="2" src="icons/coat/birch2.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(3); chooseimage(3)" id="3" src="icons/coat/birch3.jpg" height="20" width="20" />   ' +
+                '<img onclick="set_coat_kind(4); chooseimage(3)" id="4" src="icons/coat/birch4.jpg" height="20" width="20" />   ';
+
+            var paint_content = '';
+
+            if (id == 1) {
+
+                document.getElementById("coat_select").innerHTML = malamine_content;
+                document.getElementById("coat_choise").innerHTML = ' Malamine Coating';
+            } else if (id == 2) {
+                document.getElementById("coat_select").innerHTML = laminate_content;
+                document.getElementById("coat_choise").innerHTML = ' Laminate Coating';
+            } else if ((id == 3) && (material_id == 1)) {
+                document.getElementById("coat_select").innerHTML = mdf_varnish_content;
+                document.getElementById("coat_choise").innerHTML = ' Varnish Coating';
+            } else if ((id == 3) && (material_id == 2)) {
+                document.getElementById("coat_select").innerHTML = osb_varnish_content;
+                document.getElementById("coat_choise").innerHTML = ' Varnish Coating';
+            } else if ((id == 3) && (material_id == 3)) {
+                document.getElementById("coat_select").innerHTML = pine_varnish_content;
+                document.getElementById("coat_choise").innerHTML = ' Varnish Coating';
+            } else if ((id == 3) && (material_id == 4)) {
+                document.getElementById("coat_select").innerHTML = plywood_varnish_content;
+                document.getElementById("coat_choise").innerHTML = ' Varnish Coating';
+            } else if ((id == 3) && (material_id == 5)) {
+                document.getElementById("coat_select").innerHTML = birch_varnish_content;
+                document.getElementById("coat_choise").innerHTML = ' Varnish Coating';
+            } else if (id == 4) {
+                document.getElementById("coat_select").innerHTML = paint_content;
+                document.getElementById("coat_choise").innerHTML = ' Color';
+            }
+
+
+
+
+        }
+
+        function set_coat_kind(id) {
+
+
+            coat_kind = id;
+
+            CreateOrderSummary();
+            setTexture(out_image);
+
+        }
+
+        ////////////////////Calculate Materials/////////////////////////////////////////////
+
+        function CalculateMaterials(he, wi, de, maxW, maxL) {
+
+            var platesize = maxW * maxL;
+            var numofplates = 1;
+            var twoplates = platesize * 2;
+            var t_width = wi;
+
+
+            var temp_face = document.getElementById("mynewface").innerHTML;
+
+            if (temp_face == 5) {
+                t_width = t_width / 2;
+            } else if (temp_face == 4) {
+                t_width = 0;
+
+            }
+            var face1 = t_width * he * 2;
+
+            var face2 = wi * de * 2;
+            var face3 = he * de * 2;
+
+
+            var totalsize;
+
+            totalsize = face1 + face2 + face3;
+
+
+
+            if (totalsize < platesize) {
+                numofplates = 1;
+            } else if (totalsize > platesize && totalsize <= twoplates) {
+                numofplates = 2;
+            } else {
+                numofplates = 3;
+            }
+
+            num_plates = numofplates;
+            total_size = totalsize;
+            document.getElementById("numplates").innerHTML = num_plates;
+
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////Change Class
+        function ChangeButtonStyle(bStyle1, bStyle2, id1, id2, id3, val) {
+            var image1 = document.getElementById(id1);
+            image1.className = bStyle1;
+            var image2 = document.getElementById(id2);
+            image2.className = bStyle1;
+            var image3 = document.getElementById(id3);
+            image3.className = bStyle2;
+
+            var facevalue = val;
+            document.getElementById("mynewface").innerHTML = facevalue;
+
+
+        }
+
+        function handleAdditionals(imgName1, imgName2, id2, id1) {
+            var image = document.getElementById(id1);
+            var input_type = document.getElementById(id2);
+            var mymin_size;
+            var comb_status;
+
+            if (input_type.checked == true) {
+                image.src = imgName1;
+            } else {
+                image.src = imgName2;
+            };
+
+            if ((total_size >= 2400) && (total_size < 28800)) {
+                mymin_size = 1;
+
+            } else if ((total_size >= 28801) && (total_size < 57600)) {
+                mymin_size = 2;
+            } else if ((total_size >= 57601) && (total_size <= 86400)) {
+                mymin_size = 3;
+            };
+
+
+
+
+            if ((id2 == 'wheels') && (input_type.checked == true) && (material_thikness == 9) && ((material_id == 1) || (material_id == 2))) {
+                comb_status = 0;
+                alert_text = 'MDF or OBS cannot have wheels on 9mm thikness';
+                alert(alert_text);
+                changThikness('icons/9a_mm.png', 'icons/18a_mm.png', 'icons/36a_mm.png', 'icons/12_mm.png', '9mm', '18mm', '36mm', '12mm', '12');
+                document.getElementById("mynthickness").innerHTML = 12;
+                image.src = imgName2;
+                document.getElementById("wheels").checked = false;
+            };
+
+
+
+            if ((id2 == 'door') && (input_type.checked == true) && (material_thikness == 9) && ((material_id == 1) || (material_id == 2))) {
+                comb_status = 0;
+                alert_text = 'MDF or OBS cannot have a door on 9mm thikness';
+                alert(alert_text);
+                changThikness('icons/9a_mm.png', 'icons/18a_mm.png', 'icons/36a_mm.png', 'icons/12_mm.png', '9mm', '18mm', '36mm', '12mm', '12');
+                document.getElementById("mynthickness").innerHTML = 12;
+                image.src = imgName2;
+                document.getElementById("door").checked = false;
+
+            };
+
+
+
+            if ((id2 == 'door') && (input_type.checked == true) && ((material_thikness == 18) || (material_thikness == 36)) && (mymin_size == 3)) {
+                comb_status = 0;
+                alert_text = 'This size cannot have a door on 18/36mm thikness';
+                alert(alert_text);
+                changThikness('icons/9a_mm.png', 'icons/18a_mm.png', 'icons/36a_mm.png', 'icons/12_mm.png', '9mm', '18mm', '36mm', '12mm', '12');
+                document.getElementById("mynthickness").innerHTML = 12;
+                image.src = imgName2;
+                document.getElementById("door").checked = false;
+            };
+
+
+
+            if (document.getElementById("wheels").checked == false) {
+                wheels_indicator = 0;
+                removeWheels();
+            } else {
+                wheels_indicator = 1;
+                addWheels();
+            };
+            if (document.getElementById("hang").checked == false) {
+                hang_indicator = 0;
+            } else {
+                hang_indicator = 1;
+            };
+            if (document.getElementById("door").checked == false) {
+                door_indocator = 0;
+                setTexture(out_image);
+            } else {
+                door_indocator = 1;
+                addDoor();
+            };
+
+
+
+            calculatePrice();
+            CreateOrderSummary();
+
+
+        }
+
+        function changThikness(imgName1, imgName2, imgName3, imgName4, id1, id2, id3, id4, val) {
+            var image1 = document.getElementById(id1);
+            image1.src = imgName1;
+            var image2 = document.getElementById(id2);
+            image2.src = imgName2;
+            var image3 = document.getElementById(id3);
+            image3.src = imgName3;
+            var image4 = document.getElementById(id4);
+            image4.src = imgName4;
+
+            var thik_temp = document.getElementById("mynthickness");
+            thik_temp.innerHTML = val;
+
+            material_thikness = val;
+
+            var material = document.getElementById("mymaterial").innerHTML;
+
+            document.getElementById("wheels").checked = false;
+            wheels_indicator = 0;
+            document.getElementById("door").checked = false;
+            door_indicator = 0;
+            document.getElementById("hang").checked = false;
+            hang_indicator = 0;
+
+            checkCompatabilityOfCoating(material, val);
+            checkCompatabilityOfThikness(material, val, num_plates);
+
+            calculatePrice();
+            CreateOrderSummary();
+
+        }
+        function changeCoating(imgName1, imgName2, imgName3, imgName4, id1, id2, id3, id4, val) {
+            var image1 = document.getElementById(id1);
+
+            var image2 = document.getElementById(id2);
+
+            var image3 = document.getElementById(id3);
+
+            var image4 = document.getElementById(id4);
+
+            var alert_no_material;
+            alert_no_material = 'You need to choose your material first!';
+
+            if (coat_type == 4) {
+                coat_kind = color.value;
+                setColor();
+            };
+
+
+            if (material_id == 0) {
+                alert(alert_no_material);
+            } else {
+
+                image1.src = imgName1;
+                image2.src = imgName2;
+                image3.src = imgName3;
+                image4.src = imgName4;
+                coat_type = val;
+
+                showSection(val);
+
+                checkCompatabilityOfCoating(material_id, material_thikness);
+
+                calculatePrice();
+                CreateOrderSummary();
+
+                if (coat_type != 4) {
+                    setTexture(out_image);
+                }
+            }
+        }
+
+        function changeCoatingImage(imgName1, imgName2, imgName3, imgName4, id1, id2, id3, id4, val) {
+            var image1 = document.getElementById(id1);
+
+            var image2 = document.getElementById(id2);
+
+            var image3 = document.getElementById(id3);
+
+            var image4 = document.getElementById(id4);
+
+
+
+            if (material_id != 0) {
+                image1.src = imgName1;
+                image2.src = imgName2;
+                image3.src = imgName3;
+                image4.src = imgName4;
+            }
+
+
+
+        };
+
+        function changeMaterial(imgName1, imgName2, imgName3, imgName4, imgName5, id1, id2, id3, id4, id5, val) {
+            var image1 = document.getElementById(id1);
+            image1.src = imgName1;
+            var image2 = document.getElementById(id2);
+            image2.src = imgName2;
+            var image3 = document.getElementById(id3);
+            image3.src = imgName3;
+            var image4 = document.getElementById(id4);
+            image4.src = imgName4;
+            var image5 = document.getElementById(id5);
+            image5.src = imgName5;
+
+            coat_type = 0;
+            coat_kind = 0;
+
+
+            changeCoatingImage('icons/icons-04.png', 'icons/icons paint-05.png', 'icons/icons paint-06.png', 'icons/icons-12.png', 'laminate', 'lac', 'paint', 'melamine', '1');
+            changeCoatingImage('icons/icons-03.png', 'icons/icons paint-05.png', 'icons/icons paint-06.png', 'icons/icons-14.png', 'melamine', 'lac', 'paint', 'laminate', '2');
+            changeCoatingImage('icons/icons-03.png', 'icons/icons-04.png', 'icons/icons paint-06.png', 'icons/icons paint-01.png', 'melamine', 'laminate', 'paint', 'lac', '3');
+            changeCoatingImage('icons/icons-03.png', 'icons/icons-04.png', 'icons/icons paint-05.png', 'icons/icons paint-06.png', 'melamine', 'laminate', 'lac', 'paint', '4');
+
+
+            var mat_temp = document.getElementById("mymaterial");
+            mat_temp.innerHTML = val;
+
+
+            var thik2 = material_thikness;
+            material_id = val;
+            first_load = 0;
+
+
+            chooseimage(0);
+
+            checkCompatabilityOfThikness(val, thik2, num_plates);
+
+            showSection(4);
+
+            checkCompatabilityOfCoating(val, thik2);
+
+            calculatePrice();
+            CreateOrderSummary();
+            setTexture(out_image);
+
+
+
+        }
+        function changeFace(imgName1, imgName2, imgName3, id1, id2, id3,val) {
+            var image1 = document.getElementById(id1);
+            image1.src = imgName1;
+            var image2 = document.getElementById(id2);
+            image2.src = imgName2;
+            var image3 = document.getElementById(id3);
+            image3.src = imgName3;
+            
+
+
+
+            document.getElementById("mynewface").innerHTML = val;
+
+            my_faces = val;
+
+            num_of_faces = val;
+
+            CalculateMaterials(Number(x1.value), Number(x2.value), Number(y.value), 120, 240);
+            calculatePrice();
+            CreateOrderSummary();
+            setTexture(out_image);
+
+
+        }
+
+        function checkCompatabilityOfThikness(matr, thk, plates) {
+
+            var comb_status = 1;
+            var mtr = matr;
+            var thik = thk;
+            var alert_text;
+            var alert_text2;
+            var min_thik;
+            var wood;
+
+            document.getElementById("wheels").checked = false;
+            wheels_indicator = 0;
+            document.getElementById("door").checked = false;
+            door_indicator = 0;
+            document.getElementById("hang").checked = false;
+            hang_indicator = 0;
+
+            if ((mtr == '3') && ((thik == '9') || (thik == '12'))) {
+                comb_status = 0;
+            } else if ((mtr == '5') && ((thik == '9') || (thik == '12'))) {
+                comb_status = 0;
+
+            } else if ((mtr == '4') && (thik == '9')) {
+                comb_status = 0;
+            } else if ((mtr == '4') && (thik == '12') && (plates > 2)) {
+                comb_status = 0;
+            } else if (((mtr == 1) || (mtr == 2)) && (thik == 9) && (plates > 1)) {
+                comb_status = 0;
+            } else if (((mtr == 1) || (mtr == 2)) && (thik == 12) && (plates > 2)) {
+                comb_status = 0;
+            } else {
+                comb_status = 1;
+            }
+
+
+            if ((matr == 3) || (matr == 5)) {
+                min_thik = 18;
+            } else if ((plates == 3) && ((matr == 1) || (matr == 2))) {
+                min_thik = 18;
+            } else if ((matr == 4) && (plates == 3)) {
+                min_thik = 18;
+            } else if ((matr == 4) && (plates < 3)) {
+                min_thik = 12;
+            } else if ((plates == 2) && ((matr == 1) || (matr == 2))) {
+                min_thik = 12;
+
+            } else {
+                min_thik = 9;
+            }
+
+
+
+            if (mtr == 1) {
+                wood = 'MDF';
+            } else if (mtr == 2) {
+                wood = 'OSB'
+            }
+            else if (mtr == 3) {
+                wood = 'Pine'
+            } else if (mtr == 4) {
+                wood = 'Plywood'
+            } else if (mtr == 5) {
+                wood = 'Birch'
+            }
+
+
+            alert_text = wood + ' does not come in ' + thik + 'mm thikness. <br> <br> The minimum thickness for ' + wood + ' is ' + min_thik + 'mm.';
+            alert_text2 = 'This size in ' + wood + ' does not come in ' + thik + 'mm thikness. <br><br> Try with ' + min_thik + 'mm.';
+
+            if (((matr == '3') || (matr == '5'))) {
+
+                document.getElementById("mynthickness").innerHTML = 18;
+                document.getElementById("9").style.visibility = 'hidden';
+                document.getElementById("12").style.visibility = 'hidden';
+                showSection(4);
+            } else if ((matr == '4') && (plates > 2)) {
+
+                document.getElementById("mynthickness").innerHTML = 18;
+                document.getElementById("9").style.visibility = 'hidden';
+                document.getElementById("12").style.visibility = 'hidden';
+                showSection(4);
+            } else if ((matr == '4') && (plates <= 2)) {
+
+                document.getElementById("mynthickness").innerHTML = 12;
+                document.getElementById("9").style.visibility = 'hidden';
+                document.getElementById("12").style.visibility = 'visible';
+                showSection(4);
+            } else if ((comb_status == 0) && (matr < 3) && (plates == 2)) {
+
+                document.getElementById("mynthickness").innerHTML = 12;
+                document.getElementById("9").style.visibility = 'hidden';
+                document.getElementById("12").style.visibility = 'visible';
+                showSection(4);
+            } else if ((comb_status == 0) && (matr < 3) && (plates == 3)) {
+
+                document.getElementById("mynthickness").innerHTML = 18;
+                document.getElementById("9").style.visibility = 'hidden';
+                document.getElementById("12").style.visibility = 'hidden';
+                showSection(4);
+            } else if ((comb_status == 1) && ((matr == 1) || (matr == 2))) {
+                document.getElementById("9").style.visibility = 'visible';
+                document.getElementById("12").style.visibility = 'visible';
+
+            };
+
+        }
+        function checkCompatabilityOfCoating(matr, thk) {
+
+            var comb_status = 0;
+            var mtr = matr;
+            var thik = thk;
+            var alert_text;
+            var alert_text2;
+            var wood;
+            var my_coat = coat_type;
+
+
+
+            if (((mtr == '3') || (mtr == '2')) && ((coat_type == 1) || (coat_type == 2))) {
+                comb_status = 0;
+            } else if ((mtr == '1') && ((thik == '9') || (thik == '12'))) {
+                comb_status = 0;
+            } else if ((mtr == '4') && ((thik == '9') || (thik == '12'))) {
+                comb_status = 0;
+            } else {
+                comb_status = 1;
+            };
+
+            if (comb_status == 0) {
+
+                showSection(4);
+            };
+
+            if (mtr == 1) {
+                wood = 'MDF';
+            } else if (mtr == 2) {
+                wood = 'OSB'
+            }
+            else if (mtr == 3) {
+                wood = 'Pine'
+            } else if (mtr == 4) {
+                wood = 'Plywood'
+            } else if (mtr == 5) {
+                wood = 'Birch'
+            }
+
+
+
+            alert_text = wood + ' can have this coating only on 18/36 mm';
+            alert_text2 = wood + ' cannot have this type of coating';
+
+            if ((comb_status == 0) && ((mtr == '3') || (mtr == '2')) && (coat_type == 1)) {
+                alert(alert_text2);
+                showSection(4);
+                coat_type = 0;
+                coat_kind = 0;
+
+
+            } else if ((comb_status == 0) && ((mtr == '3') || (mtr == '2')) && (coat_type == 2)) {
+                alert(alert_text2);
+                showSection(4);
+                coat_type = 0;
+                coat_kind = 0;
+
+            } else if ((comb_status == 0) && ((mtr == '1') || (mtr == '4')) && (my_coat == 1)) {
+
+                changThikness('icons/9a_mm.png', 'icons/12a_mm.png', 'icons/36a_mm.png', 'icons/18_mm.png', '9mm', '12mm', '36mm', '18mm', '18');
+                document.getElementById("mynthickness").innerHTML = 18;
+                document.getElementById("9").style.visibility = 'hidden';
+                document.getElementById("12").style.visibility = 'hidden';
+
+                showSection(4);
+                coat_type = 0;
+                coat_kind = 0;
+
+            } else if ((comb_status == 0) && ((mtr == '1') || (mtr == '4')) && (my_coat == 2)) {
+
+                changThikness('icons/9a_mm.png', 'icons/12a_mm.png', 'icons/36a_mm.png', 'icons/18_mm.png', '9mm', '12mm', '36mm', '18mm', '18');
+                document.getElementById("mynthickness").innerHTML = 18;
+                document.getElementById("9").style.visibility = 'hidden';
+                document.getElementById("12").style.visibility = 'hidden';
+                showSection(4);
+                coat_type = 0;
+                coat_kind = 0;
+
+            };
+
+
+            chooseimage(1);
+        }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        ////////////Pricing Engine/////////////////////////////////////////////////////////////////////////////////////
+
+        function calculatePrice() {
+            var materail_id2 = document.getElementById("mymaterial").innerHTML;
+            var thikness_id = document.getElementById("mynthickness").innerHTML;
+            var my_size = total_size;
+            var mymin_size = 2400;
+            var my_min_price;
+            var my_size_step;
+            var my_range_price;
+            var my_temp_step;
+            var temp_round;
+            var delta_price;
+            var new_price = 0;
+            var second_price;
+            var max_weight;
+            var my_laminate;
+            var my_malamine;
+            var my_varnish;
+            var my_color;
+            var coat_price = 0;
+            var wheels_price;
+            var door_price;
+            var hang_price;
+            var add_price = 0;
+
+
+
+            if ((my_size >= 2400) && (my_size < 28800)) {
+                mymin_size = 2400;
+
+            } else if ((my_size >= 28801) && (my_size < 57600)) {
+                mymin_size = 28801;
+            } else if ((my_size >= 57601) && (my_size <= 86400)) {
+                mymin_size = 57601;
+            };
+
+            for (var i = 0; i < Price_List.length; i++) {
+                if ((Price_List[i]['Material'] == materail_id2) && (Price_List[i]['Thickness'] == thikness_id) && (Price_List[i]['min_size'] == mymin_size)) {
+
+                    my_min_price = Price_List[i]['min_price'];
+                    my_size_step = Price_List[i]['size_step'];
+                    my_range_price = Price_List[i]['range_price'];
+                    max_weight = Price_List[i]['mx_kg'];
+                    my_laminate = Price_List[i]['Laminate'];
+                    my_malamine = Price_List[i]['Malamine'];
+                    my_varnish = Price_List[i]['finish'];
+                    my_color = Price_List[i]['Color'];
+                    wheels_price = Price_List[i]['Wheels'];
+                    door_price = Price_List[i]['Door'];
+                    hang_price = Price_List[i]['Hanging'];
+
+
+                    if (coat_type == 1) {
+                        coat_price = my_malamine;
+                    } else if (coat_type == 2) {
+                        coat_price = my_laminate;
+                    } else if (coat_type == 3) {
+                        coat_price = my_varnish;
+                    } else if (coat_type == 4) {
+                        coat_price = my_color;
+                    };
+
+                    if (document.getElementById("wheels").checked == true) {
+                        add_price = add_price + wheels_price;
+                    };
+                    if (document.getElementById("door").checked == true) {
+                        add_price = add_price + door_price;
+                    };
+                    if (document.getElementById("hang").checked == true) {
+                        add_price = add_price + hang_price;
+                    };
+
+
+                    delta_size = (my_size - mymin_size);
+                    my_temp_step = ((my_size - mymin_size) / my_size_step);
+                    temp_round = Math.round(my_temp_step);
+                    delta_price = (temp_round * my_range_price);
+
+
+                    new_price = (my_min_price + delta_price + coat_price + add_price);
+
+
+                    second_price = (new_price * 1.2);
+                    min_price = new_price;
+
+                    document.getElementById("minimum").innerHTML = '$' + new_price + ' -  $' + second_price;
+                    document.getElementById("kg").innerHTML = max_weight;
+                    CreateOrderSummary();
+
+                    break;
+                }
+
+            }
+
+
+        }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        /////////////////////////////////Choose the image/////////////////////////////
+
+        function chooseimage(val) {
+
+            var mater = material_id;
+            var coat_t = coat_type;
+            var coat_k = coat_kind;
+            var img_out;
+            var img_in;
+
+
+
+            for (var i = 0; i < images.length; i++) {
+                if ((images[i]['Material'] == mater) && (images[i]['out_in'] == 0) && (images[i]['coat'] == coat_t) && (images[i]['coat_kind'] == coat_k)) {
+
+                    img_out = images[i]['image'];
+                    out_image = img_out;
+                    break;
+                }
+            };
+
+            for (var i = 0; i < images.length; i++) {
+                if ((images[i]['Material'] == mater) && (images[i]['out_in'] == 1) && (images[i]['coat'] == coat_t) && (images[i]['coat_kind'] == coat_k)) {
+
+                    img_in = images[i]['image'];
+                    in_image = img_in;
+                    break;
+                }
+            };
+
+            setTexture(out_image);
+
+        }
+        /////////////////////////////////////////////////////////////////////////////
+        // Animation function
+        function draw() {
+
+
+            CalculateMaterials(Number(x1.value), Number(x2.value), Number(y.value), 120, 240);
+
+
+
+        }
+        draw();
+
+        // Colour adjustment function
+
+        function shadeColor(color, percent) {
+            color = color.substr(1);
+            selected_color = color;
+            CreateOrderSummary();
+
+
+
+            var num = parseInt(color, 16),
+                amt = Math.round(2.55 * percent),
+                R = (num >> 16) + amt,
+                G = (num >> 8 & 0x00FF) + amt,
+                B = (num & 0x0000FF) + amt;
+            return '#' + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 + (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 + (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1);
+
+
+        }
+
+
+
+
+
+
+
+        var rangeslider = document.getElementById("x1");
+        var output = document.getElementById("height_text");
+        var out1_pos = document.getElementById("out1");
+        var rangeslider2 = document.getElementById("x2");
+        var output2 = document.getElementById("width_text");
+        var rangeslider3 = document.getElementById("y");
+        var output3 = document.getElementById("Depth_text");
+
+
+        var thumb_pos1;
+        var thumb_pos2;
+        var thumb_pos3;
+        var out_position1;
+        var out_position2;
+        var out_position3;
+        var delta_move1;
+        var delta_move2;
+        var delta_move3;
+
+
+
+
+        rangeslider.oninput = function () {
+
+            thumb_pos1 = (this.value - 20) / 100;
+            delta_move1 = 188 * thumb_pos1;
+            out_position1 = 37 + delta_move1;
+            document.getElementById("out1").innerHTML = 'D: ' + this.value;
+            document.getElementById("out1").style.left = out_position1 + 'px';
+
+        }
+
+
+
+
+        rangeslider2.oninput = function () {
+
+            thumb_pos2 = (this.value - 20) / 100;
+            delta_move2 = 188 * thumb_pos2;
+            out_position2 = 37 + delta_move2;
+            document.getElementById("out2").innerHTML = 'W: ' + this.value;
+            document.getElementById("out2").style.left = out_position2 + 'px';
+
+        }
+
+
+        rangeslider3.oninput = function () {
+
+            thumb_pos3 = (this.value - 20) / 100;
+            delta_move3 = 188 * thumb_pos3;
+            out_position3 = 37 + delta_move3;
+            document.getElementById("out3").innerHTML = 'H: ' + this.value;
+            document.getElementById("out3").style.left = out_position3 + 'px';
+
+        }
+
+        /////////////////////////Create Alert//////////////////////////////////////////
+        var ALERT_TITLE = "Ooops!";
+        var ALERT_BUTTON_TEXT = "Ok";
+
+        if (document.getElementById) {
+            window.alert = function (txt) {
+                createCustomAlert(txt);
+            }
+        }
+
+        function createCustomAlert(txt) {
+            d = document;
+
+            if (d.getElementById("modalContainer")) return;
+
+            mObj = d.getElementsByTagName("body")[0].appendChild(d.createElement("div"));
+            mObj.id = "modalContainer";
+            mObj.style.height = d.documentElement.scrollHeight + "px";
+
+            alertObj = mObj.appendChild(d.createElement("div"));
+            alertObj.id = "alertBox";
+            if (d.all && !window.opera) alertObj.style.top = document.documentElement.scrollTop + "px";
+            alertObj.style.left = (d.documentElement.scrollWidth - alertObj.offsetWidth) / 2 + "px";
+            alertObj.style.visiblity = "visible";
+
+            h1 = alertObj.appendChild(d.createElement("h1"));
+            h1.appendChild(d.createTextNode(ALERT_TITLE));
+
+            msg = alertObj.appendChild(d.createElement("p"));
+            //msg.appendChild(d.createTextNode(txt));
+            msg.innerHTML = txt;
+
+            btn = alertObj.appendChild(d.createElement("a"));
+            btn.id = "closeBtn";
+            btn.appendChild(d.createTextNode(ALERT_BUTTON_TEXT));
+            btn.href = "#";
+            btn.focus();
+            btn.onclick = function () { removeCustomAlert(); return false; }
+
+            alertObj.style.display = "block";
+
+        }
+
+        function removeCustomAlert() {
+            document.getElementsByTagName("body")[0].removeChild(document.getElementById("modalContainer"));
+        }
+        function ful() {
+            alert('Alert this pages');
+        }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    </script>
+
+    <script>
+
+        var Price_List =
+
+            [{ "Material": 1, "Thickness": 9, "min_size": 2400, "max_size": 28800, "plates": 1, "size_step": 3300, "range_price": 5, "min_price": 40, "max_price": 80, "Laminate": 0, "Malamine": 0, "finish": 15, "Color": 25, "Wheels": 0, "Door": 0, "Hanging": 5, "mx_kg": 2 },
+            { "Material": 1, "Thickness": 12, "min_size": 2400, "max_size": 28800, "plates": 1, "size_step": 3300, "range_price": 5, "min_price": 45, "max_price": 85, "Laminate": 0, "Malamine": 0, "finish": 15, "Color": 25, "Wheels": 15, "Door": 10, "Hanging": 5, "mx_kg": 12 },
+            { "Material": 1, "Thickness": 12, "min_size": 28801, "max_size": 57600, "plates": 2, "size_step": 1800, "range_price": 5, "min_price": 125, "max_price": 205, "Laminate": 0, "Malamine": 0, "finish": 30, "Color": 50, "Wheels": 15, "Door": 20, "Hanging": 5, "mx_kg": 8 },
+            { "Material": 1, "Thickness": 18, "min_size": 2400, "max_size": 28800, "plates": 1, "size_step": 3300, "range_price": 5, "min_price": 50, "max_price": 90, "Laminate": 30, "Malamine": 20, "finish": 15, "Color": 25, "Wheels": 15, "Door": 10, "Hanging": 5, "mx_kg": 80 },
+            { "Material": 1, "Thickness": 18, "min_size": 28801, "max_size": 57600, "plates": 2, "size_step": 1800, "range_price": 5, "min_price": 130, "max_price": 210, "Laminate": 60, "Malamine": 40, "finish": 30, "Color": 50, "Wheels": 15, "Door": 20, "Hanging": 5, "mx_kg": 120 },
+            { "Material": 1, "Thickness": 18, "min_size": 57601, "max_size": 86400, "plates": 3, "size_step": 1800, "range_price": 5, "min_price": 250, "max_price": 330, "Laminate": 90, "Malamine": 80, "finish": 45, "Color": 75, "Wheels": 15, "Door": 0, "Hanging": 5, "mx_kg": 180 },
+            { "Material": 1, "Thickness": 36, "min_size": 2400, "max_size": 28800, "plates": 1, "size_step": 3300, "range_price": 5, "min_price": 60, "max_price": 100, "Laminate": 30, "Malamine": 20, "finish": 15, "Color": 25, "Wheels": 15, "Door": 10, "Hanging": 5, "mx_kg": 90 },
+            { "Material": 1, "Thickness": 36, "min_size": 28801, "max_size": 57600, "plates": 2, "size_step": 1800, "range_price": 5, "min_price": 140, "max_price": 220, "Laminate": 60, "Malamine": 40, "finish": 30, "Color": 50, "Wheels": 15, "Door": 20, "Hanging": 5, "mx_kg": 130 },
+            { "Material": 1, "Thickness": 36, "min_size": 57601, "max_size": 86400, "plates": 3, "size_step": 1800, "range_price": 5, "min_price": 260, "max_price": 340, "Laminate": 90, "Malamine": 80, "finish": 45, "Color": 75, "Wheels": 15, "Door": 0, "Hanging": 5, "mx_kg": 90 },
+            { "Material": 2, "Thickness": 9, "min_size": 2400, "max_size": 28800, "plates": 1, "size_step": 3300, "range_price": 5, "min_price": 40, "max_price": 80, "Laminate": 0, "Malamine": 0, "finish": 15, "Color": 25, "Wheels": 0, "Door": 0, "Hanging": 5, "mx_kg": 2 },
+            { "Material": 2, "Thickness": 12, "min_size": 2400, "max_size": 28800, "plates": 1, "size_step": 3300, "range_price": 5, "min_price": 45, "max_price": 85, "Laminate": 0, "Malamine": 0, "finish": 15, "Color": 25, "Wheels": 15, "Door": 10, "Hanging": 5, "mx_kg": 12 },
+            { "Material": 2, "Thickness": 12, "min_size": 28801, "max_size": 57600, "plates": 2, "size_step": 1800, "range_price": 5, "min_price": 125, "max_price": 205, "Laminate": 0, "Malamine": 0, "finish": 30, "Color": 50, "Wheels": 15, "Door": 20, "Hanging": 5, "mx_kg": 8 },
+            { "Material": 2, "Thickness": 18, "min_size": 2400, "max_size": 28800, "plates": 1, "size_step": 3300, "range_price": 5, "min_price": 50, "max_price": 90, "Laminate": 0, "Malamine": 0, "finish": 15, "Color": 25, "Wheels": 15, "Door": 10, "Hanging": 5, "mx_kg": 80 },
+            { "Material": 2, "Thickness": 18, "min_size": 28801, "max_size": 57600, "plates": 2, "size_step": 1800, "range_price": 5, "min_price": 130, "max_price": 210, "Laminate": 0, "Malamine": 0, "finish": 30, "Color": 50, "Wheels": 15, "Door": 20, "Hanging": 5, "mx_kg": 120 },
+            { "Material": 2, "Thickness": 18, "min_size": 57601, "max_size": 86400, "plates": 3, "size_step": 1800, "range_price": 5, "min_price": 250, "max_price": 330, "Laminate": 0, "Malamine": 0, "finish": 45, "Color": 75, "Wheels": 15, "Door": 0, "Hanging": 5, "mx_kg": 180 },
+            { "Material": 2, "Thickness": 36, "min_size": 2400, "max_size": 28800, "plates": 1, "size_step": 3300, "range_price": 5, "min_price": 60, "max_price": 100, "Laminate": 0, "Malamine": 0, "finish": 15, "Color": 25, "Wheels": 15, "Door": 10, "Hanging": 5, "mx_kg": 90 },
+            { "Material": 2, "Thickness": 36, "min_size": 28801, "max_size": 57600, "plates": 2, "size_step": 1800, "range_price": 5, "min_price": 140, "max_price": 220, "Laminate": 0, "Malamine": 0, "finish": 30, "Color": 50, "Wheels": 15, "Door": 20, "Hanging": 5, "mx_kg": 130 },
+            { "Material": 2, "Thickness": 36, "min_size": 57601, "max_size": 86400, "plates": 3, "size_step": 1800, "range_price": 5, "min_price": 260, "max_price": 340, "Laminate": 0, "Malamine": 0, "finish": 45, "Color": 75, "Wheels": 15, "Door": 0, "Hanging": 5, "mx_kg": 90 },
+            { "Material": 4, "Thickness": 12, "min_size": 2400, "max_size": 28800, "plates": 1, "size_step": 3300, "range_price": 5, "min_price": 55, "max_price": 95, "Laminate": 0, "Malamine": 0, "finish": 15, "Color": 25, "Wheels": 15, "Door": 10, "Hanging": 5, "mx_kg": 12 },
+            { "Material": 4, "Thickness": 12, "min_size": 28801, "max_size": 57600, "plates": 2, "size_step": 1800, "range_price": 5, "min_price": 135, "max_price": 215, "Laminate": 0, "Malamine": 0, "finish": 30, "Color": 50, "Wheels": 15, "Door": 20, "Hanging": 5, "mx_kg": 8 },
+            { "Material": 4, "Thickness": 18, "min_size": 2400, "max_size": 28800, "plates": 1, "size_step": 3300, "range_price": 5, "min_price": 60, "max_price": 100, "Laminate": 30, "Malamine": 20, "finish": 15, "Color": 25, "Wheels": 15, "Door": 10, "Hanging": 5, "mx_kg": 80 },
+            { "Material": 4, "Thickness": 18, "min_size": 28801, "max_size": 57600, "plates": 2, "size_step": 1800, "range_price": 5, "min_price": 140, "max_price": 220, "Laminate": 60, "Malamine": 40, "finish": 30, "Color": 50, "Wheels": 15, "Door": 20, "Hanging": 5, "mx_kg": 120 },
+            { "Material": 4, "Thickness": 18, "min_size": 57601, "max_size": 86400, "plates": 3, "size_step": 1800, "range_price": 5, "min_price": 260, "max_price": 340, "Laminate": 90, "Malamine": 80, "finish": 45, "Color": 75, "Wheels": 15, "Door": 0, "Hanging": 5, "mx_kg": 180 },
+            { "Material": 4, "Thickness": 36, "min_size": 2400, "max_size": 28800, "plates": 1, "size_step": 3300, "range_price": 5, "min_price": 70, "max_price": 110, "Laminate": 30, "Malamine": 20, "finish": 15, "Color": 25, "Wheels": 15, "Door": 10, "Hanging": 5, "mx_kg": 90 },
+            { "Material": 4, "Thickness": 36, "min_size": 28801, "max_size": 57600, "plates": 2, "size_step": 1800, "range_price": 5, "min_price": 150, "max_price": 230, "Laminate": 60, "Malamine": 40, "finish": 30, "Color": 50, "Wheels": 15, "Door": 20, "Hanging": 5, "mx_kg": 130 },
+            { "Material": 4, "Thickness": 36, "min_size": 57601, "max_size": 86400, "plates": 3, "size_step": 1800, "range_price": 5, "min_price": 270, "max_price": 350, "Laminate": 90, "Malamine": 80, "finish": 45, "Color": 75, "Wheels": 15, "Door": 0, "Hanging": 5, "mx_kg": 190 },
+            { "Material": 3, "Thickness": 18, "min_size": 2400, "max_size": 28800, "plates": 1, "size_step": 3300, "range_price": 5, "min_price": 60, "max_price": 100, "Laminate": 0, "Malamine": 0, "finish": 15, "Color": 25, "Wheels": 15, "Door": 10, "Hanging": 5, "mx_kg": 80 },
+            { "Material": 3, "Thickness": 18, "min_size": 28801, "max_size": 57600, "plates": 2, "size_step": 1800, "range_price": 5, "min_price": 140, "max_price": 220, "Laminate": 0, "Malamine": 0, "finish": 30, "Color": 50, "Wheels": 15, "Door": 20, "Hanging": 5, "mx_kg": 120 },
+            { "Material": 3, "Thickness": 18, "min_size": 57601, "max_size": 86400, "plates": 3, "size_step": 1800, "range_price": 5, "min_price": 260, "max_price": 340, "Laminate": 0, "Malamine": 0, "finish": 45, "Color": 75, "Wheels": 15, "Door": 0, "Hanging": 5, "mx_kg": 180 },
+            { "Material": 3, "Thickness": 36, "min_size": 2400, "max_size": 28800, "plates": 1, "size_step": 3300, "range_price": 5, "min_price": 70, "max_price": 110, "Laminate": 0, "Malamine": 0, "finish": 15, "Color": 25, "Wheels": 15, "Door": 10, "Hanging": 5, "mx_kg": 90 },
+            { "Material": 3, "Thickness": 36, "min_size": 28801, "max_size": 57600, "plates": 2, "size_step": 1800, "range_price": 5, "min_price": 150, "max_price": 230, "Laminate": 0, "Malamine": 0, "finish": 30, "Color": 50, "Wheels": 15, "Door": 20, "Hanging": 5, "mx_kg": 130 },
+            { "Material": 3, "Thickness": 36, "min_size": 57601, "max_size": 86400, "plates": 3, "size_step": 1800, "range_price": 5, "min_price": 270, "max_price": 350, "Laminate": 0, "Malamine": 0, "finish": 45, "Color": 75, "Wheels": 15, "Door": 0, "Hanging": 5, "mx_kg": 190 },
+            { "Material": 5, "Thickness": 18, "min_size": 2400, "max_size": 28800, "plates": 1, "size_step": 3300, "range_price": 5, "min_price": 65, "max_price": 105, "Laminate": 30, "Malamine": 20, "finish": 15, "Color": 25, "Wheels": 15, "Door": 10, "Hanging": 5, "mx_kg": 80 },
+            { "Material": 5, "Thickness": 18, "min_size": 28801, "max_size": 57600, "plates": 2, "size_step": 1800, "range_price": 5, "min_price": 140, "max_price": 225, "Laminate": 60, "Malamine": 40, "finish": 30, "Color": 50, "Wheels": 15, "Door": 20, "Hanging": 5, "mx_kg": 120 },
+            { "Material": 5, "Thickness": 18, "min_size": 57601, "max_size": 86400, "plates": 3, "size_step": 1800, "range_price": 5, "min_price": 265, "max_price": 345, "Laminate": 90, "Malamine": 80, "finish": 45, "Color": 75, "Wheels": 15, "Door": 0, "Hanging": 5, "mx_kg": 180 },
+            { "Material": 5, "Thickness": 36, "min_size": 2400, "max_size": 28800, "plates": 1, "size_step": 3300, "range_price": 5, "min_price": 75, "max_price": 115, "Laminate": 30, "Malamine": 20, "finish": 15, "Color": 25, "Wheels": 15, "Door": 10, "Hanging": 5, "mx_kg": 90 },
+            { "Material": 5, "Thickness": 36, "min_size": 28801, "max_size": 57600, "plates": 2, "size_step": 1800, "range_price": 5, "min_price": 155, "max_price": 235, "Laminate": 60, "Malamine": 40, "finish": 30, "Color": 50, "Wheels": 15, "Door": 20, "Hanging": 5, "mx_kg": 130 },
+            { "Material": 5, "Thickness": 36, "min_size": 57601, "max_size": 86400, "plates": 3, "size_step": 1800, "range_price": 5, "min_price": 275, "max_price": 355, "Laminate": 90, "Malamine": 80, "finish": 45, "Color": 75, "Wheels": 15, "Door": 0, "Hanging": 5, "mx_kg": 190 }]
+
+        var images =
+            [{ "Material": 1, "out_in": 0, "coat": 0, "coat_kind": 0, "image": "https://i.ibb.co/094Cs09/mdf1.jpg" },
+                { "Material": 1, "out_in": 1, "coat": 0, "coat_kind": 0, "image": "icons/mdf2.jpg" },
+                { "Material": 1, "out_in": 0, "coat": 1, "coat_kind": 0, "image": "https://i.ibb.co/094Cs09/mdf1.jpg" },
+                { "Material": 1, "out_in": 1, "coat": 1, "coat_kind": 0, "image": "icons/mdf2.jpg" },
+                { "Material": 1, "out_in": 0, "coat": 2, "coat_kind": 0, "image": "https://i.ibb.co/094Cs09/mdf1.jpg" },
+                { "Material": 1, "out_in": 1, "coat": 2, "coat_kind": 0, "image": "icons/mdf2.jpg" },
+                { "Material": 1, "out_in": 0, "coat": 3, "coat_kind": 0, "image": "https://i.ibb.co/094Cs09/mdf1.jpg" },
+                { "Material": 1, "out_in": 1, "coat": 3, "coat_kind": 0, "image": "icons/mdf2.jpg" },
+                { "Material": 1, "out_in": 0, "coat": 1, "coat_kind": 1480, "image": "https://i.ibb.co/0QbWtG9/malamine1480.jpg" },
+                { "Material": 1, "out_in": 0, "coat": 1, "coat_kind": 3130, "image": "https://i.ibb.co/xSsyJKj/malamine3130.jpg" },
+                { "Material": 1, "out_in": 0, "coat": 1, "coat_kind": 3150, "image": "https://i.ibb.co/qgx4Qgs/malamine3150.jpg" },
+                { "Material": 1, "out_in": 0, "coat": 1, "coat_kind": 3930, "image": "https://i.ibb.co/kXSFbpC/malamine3930.jpg" },
+                { "Material": 1, "out_in": 0, "coat": 1, "coat_kind": 3234, "image": "https://i.ibb.co/bJf1y32/malamine3234.jpg" },
+                { "Material": 1, "out_in": 0, "coat": 1, "coat_kind": 3340, "image": "https://i.ibb.co/t4f7w1t/malamine3340.jpg" },
+                { "Material": 1, "out_in": 0, "coat": 1, "coat_kind": 3374, "image": "https://i.ibb.co/GsHLGj3/malamine3374.jpg" },
+                { "Material": 1, "out_in": 0, "coat": 1, "coat_kind": 3614, "image": "https://i.ibb.co/NCBpJbV/malamine3614.jpg" },
+                { "Material": 1, "out_in": 0, "coat": 1, "coat_kind": 3707, "image": "https://i.ibb.co/wNHv0SK/malamine3707.jpg" },
+                { "Material": 1, "out_in": 0, "coat": 1, "coat_kind": 3870, "image": "https://i.ibb.co/FVXkmJ5/malamine3870.jpg" },
+                { "Material": 1, "out_in": 0, "coat": 1, "coat_kind": 3915, "image": "https://i.ibb.co/LPbc63t/malamine3915.jpg" },
+                { "Material": 1, "out_in": 0, "coat": 2, "coat_kind": 113, "image": "https://i.ibb.co/DVNc4ZL/laminate-113sd.jpg" },
+                { "Material": 1, "out_in": 0, "coat": 2, "coat_kind": 1070, "image": "https://i.ibb.co/2hwpjQh/laminate-1070sd.jpg" },
+                { "Material": 1, "out_in": 0, "coat": 2, "coat_kind": 3040, "image": "https://i.ibb.co/Srfwyfm/laminate-3040sd.jpg" },
+                { "Material": 1, "out_in": 0, "coat": 2, "coat_kind": 1690, "image": "https://i.ibb.co/QMDsXvX/laminate-1690sd.jpg" },
+                { "Material": 1, "out_in": 0, "coat": 2, "coat_kind": 1730, "image": "https://i.ibb.co/K0v3BVv/laminate-1730sd.jpg" },
+                { "Material": 1, "out_in": 0, "coat": 2, "coat_kind": 2990, "image": "https://i.ibb.co/pLKqqxG/laminate-2290sd.jpg" },
+                { "Material": 1, "out_in": 0, "coat": 2, "coat_kind": 2450, "image": "https://i.ibb.co/dgy7nw6/laminate-2450sd.jpg" },
+                { "Material": 1, "out_in": 0, "coat": 2, "coat_kind": 2470, "image": "https://i.ibb.co/Hp1Dt6L/laminate-2470sd.jpg" },
+                { "Material": 1, "out_in": 0, "coat": 2, "coat_kind": 2680, "image": "https://i.ibb.co/t2884nR/laminate-2680sd.jpg" },
+                { "Material": 1, "out_in": 0, "coat": 2, "coat_kind": 2840, "image": "https://i.ibb.co/CMywNnp/laminate-2840sd.jpg" },
+                { "Material": 1, "out_in": 0, "coat": 2, "coat_kind": 4540, "image": "https://i.ibb.co/jyV5YBR/laminate-4540sd.jpg" },
+                { "Material": 1, "out_in": 0, "coat": 3, "coat_kind": 1, "image": "https://i.ibb.co/zFx8wWW/mdf.jpg" },
+                { "Material": 1, "out_in": 0, "coat": 3, "coat_kind": 2, "image": "https://i.ibb.co/093gvDq/mdf2.jpg" },
+                { "Material": 1, "out_in": 0, "coat": 3, "coat_kind": 3, "image": "https://i.ibb.co/Vxj4x63/mdf3.jpg" },
+                { "Material": 1, "out_in": 0, "coat": 3, "coat_kind": 4, "image": "https://i.ibb.co/HYH48fG/mdf4.jpg" },
+                { "Material": 2, "out_in": 0, "coat": 0, "coat_kind": 0, "image": "https://i.ibb.co/kqNpRY6/osb1.jpg" },
+                { "Material": 2, "out_in": 1, "coat": 0, "coat_kind": 0, "image": "icons/osb2.jpg" },
+                { "Material": 2, "out_in": 0, "coat": 1, "coat_kind": 0, "image": "https://i.ibb.co/kqNpRY6/osb1.jpg" },
+                { "Material": 2, "out_in": 1, "coat": 1, "coat_kind": 0, "image": "icons/osb2.jpg" },
+                { "Material": 2, "out_in": 0, "coat": 2, "coat_kind": 0, "image": "https://i.ibb.co/kqNpRY6/osb1.jpg" },
+                { "Material": 2, "out_in": 1, "coat": 2, "coat_kind": 0, "image": "icons/osb2.jpg" },
+                { "Material": 2, "out_in": 0, "coat": 3, "coat_kind": 0, "image": "https://i.ibb.co/kqNpRY6/osb1.jpg" },
+                { "Material": 2, "out_in": 1, "coat": 3, "coat_kind": 0, "image": "icons/osb2.jpg" },
+                { "Material": 2, "out_in": 0, "coat": 3, "coat_kind": 1, "image": "https://i.ibb.co/qgvJH89/osb.jpg" },
+                { "Material": 2, "out_in": 0, "coat": 3, "coat_kind": 2, "image": "https://i.ibb.co/g6qYjVm/osb2.jpg" },
+                { "Material": 2, "out_in": 0, "coat": 3, "coat_kind": 3, "image": "https://i.ibb.co/ncKQ0dP/osb3.jpg" },
+                { "Material": 2, "out_in": 0, "coat": 3, "coat_kind": 4, "image": "https://i.ibb.co/RvbV6ZB/osb4.jpg" },
+                { "Material": 3, "out_in": 0, "coat": 0, "coat_kind": 0, "image": "https://i.ibb.co/KhrmLbz/pine1.jpg" },
+                { "Material": 3, "out_in": 1, "coat": 0, "coat_kind": 0, "image": "icons/pine2.jpg" },
+                { "Material": 3, "out_in": 0, "coat": 1, "coat_kind": 0, "image": "https://i.ibb.co/KhrmLbz/pine1.jpg" },
+                { "Material": 3, "out_in": 1, "coat": 1, "coat_kind": 0, "image": "icons/pine2.jpg" },
+                { "Material": 3, "out_in": 0, "coat": 2, "coat_kind": 0, "image": "https://i.ibb.co/KhrmLbz/pine1.jpg" },
+                { "Material": 3, "out_in": 1, "coat": 2, "coat_kind": 0, "image": "icons/pine2.jpg" },
+                { "Material": 3, "out_in": 0, "coat": 3, "coat_kind": 0, "image": "https://i.ibb.co/KhrmLbz/pine1.jpg" },
+                { "Material": 3, "out_in": 1, "coat": 3, "coat_kind": 0, "image": "icons/pine2.jpg" },
+                { "Material": 3, "out_in": 0, "coat": 3, "coat_kind": 1, "image": "https://i.ibb.co/2tsgY8P/pine1.jpg" },
+                { "Material": 3, "out_in": 0, "coat": 3, "coat_kind": 2, "image": "https://i.ibb.co/McV6ncV/pine2.jpg" },
+                { "Material": 3, "out_in": 0, "coat": 3, "coat_kind": 3, "image": "https://i.ibb.co/K0Q01S5/pine1-copy2.jpg" },
+                { "Material": 3, "out_in": 0, "coat": 3, "coat_kind": 4, "image": "https://i.ibb.co/rssLfsJ/pine4.jpg" },
+                { "Material": 4, "out_in": 0, "coat": 0, "coat_kind": 0, "image": "https://i.ibb.co/RD75Sn2/plywood1.jpg" },
+                { "Material": 4, "out_in": 1, "coat": 0, "coat_kind": 0, "image": "icons/plywood2.jpg" },
+                { "Material": 4, "out_in": 0, "coat": 1, "coat_kind": 0, "image": "https://i.ibb.co/RD75Sn2/plywood1.jpg" },
+                { "Material": 4, "out_in": 1, "coat": 1, "coat_kind": 0, "image": "icons/plywood2.jpg" },
+                { "Material": 4, "out_in": 0, "coat": 2, "coat_kind": 0, "image": "https://i.ibb.co/RD75Sn2/plywood1.jpg" },
+                { "Material": 4, "out_in": 1, "coat": 2, "coat_kind": 0, "image": "icons/plywood2.jpg" },
+                { "Material": 4, "out_in": 0, "coat": 3, "coat_kind": 0, "image": "https://i.ibb.co/RD75Sn2/plywood1.jpg" },
+                { "Material": 4, "out_in": 1, "coat": 3, "coat_kind": 0, "image": "icons/plywood2.jpg" },
+                { "Material": 4, "out_in": 0, "coat": 3, "coat_kind": 1, "image": "https://i.ibb.co/0J0fMTT/plywood1.jpg" },
+                { "Material": 4, "out_in": 0, "coat": 3, "coat_kind": 2, "image": "https://i.ibb.co/fvhSJDY/plywood2.jpg" },
+                { "Material": 4, "out_in": 0, "coat": 3, "coat_kind": 3, "image": "https://i.ibb.co/jMRx37K/plywood3.jpg" },
+                { "Material": 4, "out_in": 0, "coat": 3, "coat_kind": 4, "image": "https://i.ibb.co/HFfcMD8/plywood4.jpg" },
+                { "Material": 4, "out_in": 0, "coat": 1, "coat_kind": 1480, "image": "https://i.ibb.co/0QbWtG9/malamine1480.jpg" },
+                { "Material": 4, "out_in": 0, "coat": 1, "coat_kind": 3130, "image": "https://i.ibb.co/xSsyJKj/malamine3130.jpg" },
+                { "Material": 4, "out_in": 0, "coat": 1, "coat_kind": 3150, "image": "https://i.ibb.co/qgx4Qgs/malamine3150.jpg" },
+                { "Material": 4, "out_in": 0, "coat": 1, "coat_kind": 3930, "image": "https://i.ibb.co/kXSFbpC/malamine3930.jpg" },
+                { "Material": 4, "out_in": 0, "coat": 1, "coat_kind": 3234, "image": "https://i.ibb.co/bJf1y32/malamine3234.jpg" },
+                { "Material": 4, "out_in": 0, "coat": 1, "coat_kind": 3340, "image": "https://i.ibb.co/t4f7w1t/malamine3340.jpg" },
+                { "Material": 4, "out_in": 0, "coat": 1, "coat_kind": 3374, "image": "https://i.ibb.co/GsHLGj3/malamine3374.jpg" },
+                { "Material": 4, "out_in": 0, "coat": 1, "coat_kind": 3614, "image": "https://i.ibb.co/NCBpJbV/malamine3614.jpg" },
+                { "Material": 4, "out_in": 0, "coat": 1, "coat_kind": 3707, "image": "https://i.ibb.co/wNHv0SK/malamine3707.jpg" },
+                { "Material": 4, "out_in": 0, "coat": 1, "coat_kind": 3870, "image": "https://i.ibb.co/FVXkmJ5/malamine3870.jpg" },
+                { "Material": 4, "out_in": 0, "coat": 1, "coat_kind": 3915, "image": "https://i.ibb.co/LPbc63t/malamine3915.jpg" },
+                { "Material": 4, "out_in": 0, "coat": 2, "coat_kind": 113, "image": "https://i.ibb.co/DVNc4ZL/laminate-113sd.jpg" },
+                { "Material": 4, "out_in": 0, "coat": 2, "coat_kind": 1070, "image": "https://i.ibb.co/2hwpjQh/laminate-1070sd.jpg" },
+                { "Material": 4, "out_in": 0, "coat": 2, "coat_kind": 3040, "image": "https://i.ibb.co/Srfwyfm/laminate-3040sd.jpg" },
+                { "Material": 4, "out_in": 0, "coat": 2, "coat_kind": 1690, "image": "https://i.ibb.co/QMDsXvX/laminate-1690sd.jpg" },
+                { "Material": 4, "out_in": 0, "coat": 2, "coat_kind": 1730, "image": "https://i.ibb.co/K0v3BVv/laminate-1730sd.jpg" },
+                { "Material": 4, "out_in": 0, "coat": 2, "coat_kind": 2990, "image": "https://i.ibb.co/pLKqqxG/laminate-2290sd.jpg" },
+                { "Material": 4, "out_in": 0, "coat": 2, "coat_kind": 2450, "image": "https://i.ibb.co/dgy7nw6/laminate-2450sd.jpg" },
+                { "Material": 4, "out_in": 0, "coat": 2, "coat_kind": 2470, "image": "https://i.ibb.co/Hp1Dt6L/laminate-2470sd.jpg" },
+                { "Material": 4, "out_in": 0, "coat": 2, "coat_kind": 2680, "image": "https://i.ibb.co/t2884nR/laminate-2680sd.jpg" },
+                { "Material": 4, "out_in": 0, "coat": 2, "coat_kind": 2840, "image": "https://i.ibb.co/CMywNnp/laminate-2840sd.jpg" },
+                { "Material": 4, "out_in": 0, "coat": 2, "coat_kind": 4540, "image": "https://i.ibb.co/jyV5YBR/laminate-4540sd.jpg" },
+                { "Material": 5, "out_in": 0, "coat": 0, "coat_kind": 0, "image": "https://i.ibb.co/HFfCptc/birch1.jpg" },
+                { "Material": 5, "out_in": 1, "coat": 0, "coat_kind": 0, "image": "icons/birch2.jpg" },
+                { "Material": 5, "out_in": 0, "coat": 1, "coat_kind": 0, "image": "https://i.ibb.co/HFfCptc/birch1.jpg" },
+                { "Material": 5, "out_in": 1, "coat": 1, "coat_kind": 0, "image": "icons/birch2.png" },
+                { "Material": 5, "out_in": 0, "coat": 2, "coat_kind": 0, "image": "https://i.ibb.co/HFfCptc/birch1.jpg" },
+                { "Material": 5, "out_in": 1, "coat": 2, "coat_kind": 0, "image": "icons/birch2.png" },
+                { "Material": 5, "out_in": 0, "coat": 3, "coat_kind": 0, "image": "https://i.ibb.co/HFfCptc/birch1.jpg" },
+                { "Material": 5, "out_in": 1, "coat": 3, "coat_kind": 0, "image": "icons/birch2.png" },
+                { "Material": 5, "out_in": 0, "coat": 3, "coat_kind": 1, "image": "https://i.ibb.co/26TRzKN/birch1.jpg" },
+                { "Material": 5, "out_in": 0, "coat": 3, "coat_kind": 2, "image": "https://i.ibb.co/3fN90kQ/birch2.jpg" },
+                { "Material": 5, "out_in": 0, "coat": 3, "coat_kind": 3, "image": "https://i.ibb.co/C2gkZtS/birch3.jpg" },
+                { "Material": 5, "out_in": 0, "coat": 3, "coat_kind": 4, "image": "https://i.ibb.co/7gHYG3g/birch4.jpg" },
+                { "Material": 5, "out_in": 0, "coat": 1, "coat_kind": 1480, "image": "https://i.ibb.co/0QbWtG9/malamine1480.jpg" },
+                { "Material": 5, "out_in": 0, "coat": 1, "coat_kind": 3130, "image": "https://i.ibb.co/xSsyJKj/malamine3130.jpg" },
+                { "Material": 5, "out_in": 0, "coat": 1, "coat_kind": 3150, "image": "https://i.ibb.co/qgx4Qgs/malamine3150.jpg" },
+                { "Material": 5, "out_in": 0, "coat": 1, "coat_kind": 3930, "image": "https://i.ibb.co/kXSFbpC/malamine3930.jpg" },
+                { "Material": 5, "out_in": 0, "coat": 1, "coat_kind": 3234, "image": "https://i.ibb.co/bJf1y32/malamine3234.jpg" },
+                { "Material": 5, "out_in": 0, "coat": 1, "coat_kind": 3340, "image": "https://i.ibb.co/t4f7w1t/malamine3340.jpg" },
+                { "Material": 5, "out_in": 0, "coat": 1, "coat_kind": 3374, "image": "https://i.ibb.co/GsHLGj3/malamine3374.jpg" },
+                { "Material": 5, "out_in": 0, "coat": 1, "coat_kind": 3614, "image": "https://i.ibb.co/NCBpJbV/malamine3614.jpg" },
+                { "Material": 5, "out_in": 0, "coat": 1, "coat_kind": 3707, "image": "https://i.ibb.co/wNHv0SK/malamine3707.jpg" },
+                { "Material": 5, "out_in": 0, "coat": 1, "coat_kind": 3870, "image": "https://i.ibb.co/FVXkmJ5/malamine3870.jpg" },
+                { "Material": 5, "out_in": 0, "coat": 1, "coat_kind": 3915, "image": "https://i.ibb.co/LPbc63t/malamine3915.jpg" },
+                { "Material": 5, "out_in": 0, "coat": 2, "coat_kind": 113, "image": "https://i.ibb.co/DVNc4ZL/laminate-113sd.jpg" },
+                { "Material": 5, "out_in": 0, "coat": 2, "coat_kind": 1070, "image": "https://i.ibb.co/2hwpjQh/laminate-1070sd.jpg" },
+                { "Material": 5, "out_in": 0, "coat": 2, "coat_kind": 3040, "image": "https://i.ibb.co/Srfwyfm/laminate-3040sd.jpg" },
+                { "Material": 5, "out_in": 0, "coat": 2, "coat_kind": 1690, "image": "https://i.ibb.co/QMDsXvX/laminate-1690sd.jpg" },
+                { "Material": 5, "out_in": 0, "coat": 2, "coat_kind": 1730, "image": "https://i.ibb.co/K0v3BVv/laminate-1730sd.jpg" },
+                { "Material": 5, "out_in": 0, "coat": 2, "coat_kind": 2990, "image": "https://i.ibb.co/pLKqqxG/laminate-2290sd.jpg" },
+                { "Material": 5, "out_in": 0, "coat": 2, "coat_kind": 2450, "image": "https://i.ibb.co/dgy7nw6/laminate-2450sd.jpg" },
+                { "Material": 5, "out_in": 0, "coat": 2, "coat_kind": 2470, "image": "https://i.ibb.co/Hp1Dt6L/laminate-2470sd.jpg" },
+                { "Material": 5, "out_in": 0, "coat": 2, "coat_kind": 2680, "image": "https://i.ibb.co/t2884nR/laminate-2680sd.jpg" },
+                { "Material": 5, "out_in": 0, "coat": 2, "coat_kind": 2840, "image": "https://i.ibb.co/CMywNnp/laminate-2840sd.jpg" },
+                { "Material": 5, "out_in": 0, "coat": 2, "coat_kind": 4540, "image": "https://i.ibb.co/jyV5YBR/laminate-4540sd.jpg" }]
+
+    </script>
+
+
+
+    <script>
+
+
+
+
+
+        // Set up some variables and add a mousemove handler to the page
+        var mouseX = 0;                                               // Mouse X pos relative to window centre
+        var mouseY = 0;                                               // Mouse Y pos relative to window centre
+        var windowCentreX = window.innerWidth / 2;                    // Window centre (X pos)
+        var windowCentreY = window.innerHeight / 2;                   // Window centre (Y pos)
+        var mouseDown;
+
+
+        document.addEventListener('mousemove', function (event) {
+
+            // Update mouseX and mouseY based on the new mouse X and Y positions
+            mouseX = (event.clientX - windowCentreX);
+            mouseY = (event.clientY - windowCentreY);
+        }, false);
+
+        document.body.addEventListener("mousedown", function (event) {
+            mouseDown = true
+        }, false);
+        document.body.addEventListener("mouseup", function (event) {
+            mouseDown = false
+        }, false);
+
+        var camera, scene, scene2, renderer, renderer2, pivot;
+        var mesh, mesh2, mesh3, mesh4, mesh5, mesh6, mesh7, mesh8, mesh9, mesh10, mesh11, mesh12;
+        var material, material2, material3, material4, material5, material6;
+        var zValue;
+        var wheel, wheel2, wheel3, wheel4, wheelMaterial;
+        var wheel_new, wheel_new2, wheel_new3, wheel_new4, wheel_inside, wheel_stick, wheel_stick2, wheel_stick3, wheel_stick4;
+        var suraface, surface_material, wall;
+
+        init();
+        animate();
+
+
+
+    </script>
+
+
+</body>
+</html>
